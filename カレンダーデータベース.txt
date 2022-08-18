@@ -1,0 +1,39 @@
+CREATE TABLE kinds_table(
+  kinds_id   int             NOT NULL AUTO_INCREMENT,
+  kinds     nvarchar(10)    NOT NULL,
+  PRIMARY KEY(kinds_id)
+);
+
+CREATE TABLE access_table(
+  access_id   int       NOT NULL AUTO_INCREMENT,
+  password    nvarchar(30)       NOT NULL,
+  PRIMARY KEY (access_id)
+);
+
+CREATE TABLE user_table(
+  user_id int   NOT NULL    AUTO_INCREMENT,
+  user_name nvarchar(25)    NOT NULL,
+  access_id      int         NOT NULL,
+  PRIMARY KEY (user_id),
+  FOREIGN KEY (access_id) REFERENCES access_table (access_id)
+);
+
+CREATE TABLE schedule(
+  id    int             NOT NULL AUTO_INCREMENT,
+  days  date            NOT NULL,
+  kinds_id int           NOT NULL,
+  user_id int           NOT NULL,
+  memo  nvarchar(225)   NOT NULL,
+  PRIMARY KEY(id),
+  FOREIGN KEY (kinds_id) REFERENCES kinds_table(kinds_id),
+  FOREIGN KEY (user_id) REFERENCES user_table(user_id)
+);
+
+
+INSERT INTO kinds_table VALUES(1, '学校');
+INSERT INTO kinds_table VALUES(2, '試験');
+INSERT INTO kinds_table VALUES(3, '課題');
+INSERT INTO kinds_table VALUES(4, '行事');
+INSERT INTO kinds_table VALUES(5, '就活');
+INSERT INTO kinds_table VALUES(6, 'アルバイト');
+INSERT INTO kinds_table VALUES(7, '旅行');
