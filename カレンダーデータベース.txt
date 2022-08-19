@@ -38,11 +38,11 @@ INSERT INTO kinds_table VALUES(5, '就活');
 INSERT INTO kinds_table VALUES(6, 'アルバイト');
 INSERT INTO kinds_table VALUES(7, '旅行');
 
-INSERT INTO access_table VALUES(, aaaa);
-INSERT INTO access_table VALUES(, iiii);
+INSERT INTO access_table(password) VALUES(aaaa);
+INSERT INTO access_table(password) VALUES(iiii);
 
-INSERT INTO user_table VALUES(, '田中', 1);
-INSERT INTO user_table VALUES(, '山田', 2);
+INSERT INTO user_table(user_name, access_id) VALUES('田中', 1);
+INSERT INTO user_table(user_name, access_id) VALUES('山田', 2);
 
-INSERT INTO schedule VALUES(, '2022-08-18', 1, 1, test1);
-INSERT INTO schedule VALUES(, '2022-08-19', 2, 2, test2);
+INSERT INTO schedule(days, kinds_id, user_id, memo) VALUES('2022-08-18', 1, 1, test1);
+INSERT INTO schedule(days, kinds_id, user_id, memo) VALUES('2022-08-19', 2, 2, test2);
