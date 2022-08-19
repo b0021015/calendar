@@ -1,16 +1,18 @@
-CREATE TABLE kinds_table(
+CREATE DATABASE apr01;
+
+CREATE TABLE apr01.kinds_table(
   kinds_id   int             NOT NULL AUTO_INCREMENT,
   kinds     nvarchar(10)    NOT NULL,
   PRIMARY KEY(kinds_id)
 );
 
-CREATE TABLE access_table(
+CREATE TABLE apr01.access_table(
   access_id   int       NOT NULL AUTO_INCREMENT,
   password    nvarchar(30)       NOT NULL,
   PRIMARY KEY (access_id)
 );
 
-CREATE TABLE user_table(
+CREATE TABLE apr01.user_table(
   user_id int   NOT NULL    AUTO_INCREMENT,
   user_name nvarchar(25)    NOT NULL,
   access_id      int         NOT NULL,
@@ -18,7 +20,7 @@ CREATE TABLE user_table(
   FOREIGN KEY (access_id) REFERENCES access_table (access_id)
 );
 
-CREATE TABLE schedule(
+CREATE TABLE apr01.schedule(
   id    int             NOT NULL AUTO_INCREMENT,
   days  date            NOT NULL,
   kinds_id int           NOT NULL,
@@ -30,19 +32,10 @@ CREATE TABLE schedule(
 );
 
 
-INSERT INTO kinds_table VALUES(1, '学校');
-INSERT INTO kinds_table VALUES(2, '試験');
-INSERT INTO kinds_table VALUES(3, '課題');
-INSERT INTO kinds_table VALUES(4, '行事');
-INSERT INTO kinds_table VALUES(5, '就活');
-INSERT INTO kinds_table VALUES(6, 'アルバイト');
-INSERT INTO kinds_table VALUES(7, '旅行');
+INSERT INTO apr01.kinds_table VALUES(1, '学校'),(2, '試験'),(3, '課題'),(4, '行事'),(5, '就活'),(6, 'アルバイト'),(7, '旅行');
 
-INSERT INTO access_table(password) VALUES(aaaa);
-INSERT INTO access_table(password) VALUES(iiii);
+INSERT INTO apr01.access_table(password) VALUES(aaaa),(iiii);
 
-INSERT INTO user_table(user_name, access_id) VALUES('田中', 1);
-INSERT INTO user_table(user_name, access_id) VALUES('山田', 2);
+INSERT INTO apr01.user_table(user_name, access_id) VALUES('田中', 1),('山田', 2);
 
-INSERT INTO schedule(days, kinds_id, user_id, memo) VALUES('2022-08-18', 1, 1, test1);
-INSERT INTO schedule(days, kinds_id, user_id, memo) VALUES('2022-08-19', 2, 2, test2);
+INSERT INTO apr01.schedule(days, kinds_id, user_id, memo) VALUES('2022-08-18', 1, 1, test1),('2022-08-19', 2, 2, test2);
