@@ -16,7 +16,6 @@ class YicDiary:
     self.User = None
     if UserDate is not None:
       self.User = UserDate
-    print(UserDate)
     root.title('予定管理アプリ')
     root.geometry('520x280')
     root.resizable(0, 0)
@@ -54,6 +53,7 @@ class YicDiary:
     self.userCombo = None
     self.userbutton = None
     
+    self.schedulePut = []
 
     self.title = None
     # 左側のカレンダー部分
@@ -82,7 +82,6 @@ class YicDiary:
 
     self.calendar = tk.Frame(leftFrame)
     self.calendar.grid(row=1, column=0, columnspan=3)
-    #self.disp(0)
 
     self.ComboUser = tk.Frame(leftFrame)
     self.ComboUser.grid(row = 5, column = 0)
@@ -135,22 +134,27 @@ class YicDiary:
         with connection.cursor() as cursor:
 
             cursor = connection.cursor()
+            if len(self.schedulePut) > 0:
+              user_name = self.userCombo.get()
+              #print(user_name)
+              if user_name == '全員':
+                #全員の場合
+                sql = "select memo, kinds from schedule inner join kinds_table on schedule.kinds_id = kinds_table.kinds_id where days = '{}-{}-{}'".format(self.year, self.mon, self.today)
+              else:
+                #誰かの場合
+                sql = "select memo, kinds from schedule inner join kinds_table on schedule.kinds_id = kinds_table.kinds_id inner join user_table on schedule.user_id = user_table.user_id where days = '{}-{}-{}' and user_name = '{}'".format(self.year, self.mon, self.today, user_name)
             #sql = "select memo from schedule where days = '{}-{}-{}'".format(self.year, self.mon, self.today)
-            #全員の場合
-            sql = "select memo, kinds from schedule inner join kinds_table on schedule.kinds_id = kinds_table.kinds_id where days = '{}-{}-{}'".format(self.year, self.mon, self.today)
 
-            #誰かの場合
-            #sql = "select memo, kinds from schedule inner join kinds_table on schedule.kinds_id = kinds_table.kinds_id inner join user_table on schedule.user_id = user_table.user_id where days = '{}-{}-{}', user_name = '{}'".format(self.year, self.mon, self.today)
-            print(sql)
+              #print(sql)
 
-            print(cursor.execute(sql))
+              cursor.execute(sql)
 
-            results = cursor.fetchall()
+              results = cursor.fetchall()
 
-            for i, row in enumerate(results):
-                temp += ("・{}: {}\n".format(row["kinds"], row["memo"]))
-                #temp += (row["memo"])
-        print(temp)
+              for i, row in enumerate(results):
+                  temp += ("・{}: {}\n".format(row["kinds"], row["memo"]))
+                  #temp += (row["memo"])
+        #print(temp)
 
         connection.commit()
 
@@ -201,24 +205,22 @@ class YicDiary:
             sql = "select user_name, user_table.user_id from schedule inner join user_table on schedule.user_id = user_table.user_id where days = '{}-{}-{}'".format(self.year, self.mon, self.today)
             cursor.execute(sql)
             results = cursor.fetchall()
-            #print(results)
             if len(results) != 0:
               self.schedulePut.append('全員')
               for i, row in enumerate(results):
-                  print(i, row)
+              #    print(i, row)
                   self.schedulePut.append(row['user_name'])
                     
-              print(self.schedulePut)
-              print(self.schedulePut[0])
               v = tk.StringVar()
             #コンボボックス
-            #self.userCombo = ttk.Combobox(self.ComboUser, textvariable = 'readonly', values = self.schedulePut, width=10)
             self.userCombo = ttk.Combobox(self.ComboUser, state = 'readonly', values = self.schedulePut, width=10)
+            #variable =  tk.StringVar()
+            #self.userCombo = ttk.Combobox(self.ComboUser, state = 'readonly', values = self.schedulePut, textvariable = variable, width=10)
             #コンボボックスの初期配置
             #userCombo.set(self.schedulePut[0])
             self.userCombo.current(0)
-            #userCombo.bind('<<ComboboxSelected>>', command = self.schedule())
             self.userCombo.grid(row = 0, column = 1)
+
         connection.commit()
     
     except Exception as e:
@@ -228,6 +230,9 @@ class YicDiary:
       connection.close()
     self.userbutton = ttk.Button(self.ComboUser, text = 'OK', command = lambda:self.schedule())
     self.userbutton.grid(row = 1, column = 1)
+
+    if len(self.schedulePut) > 0:
+      self.schedule()
 
 
   #-----------------------------------------------------------------
